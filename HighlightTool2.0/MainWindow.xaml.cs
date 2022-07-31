@@ -23,6 +23,7 @@ namespace HighlightTool2._0
     {
         private string videoPath;
         private string audioPath;
+        private float volumeSliderValue;
         public MainWindow()
         {
             InitializeComponent();
@@ -64,10 +65,17 @@ namespace HighlightTool2._0
             string trimmedBackgroundAudio = ffh.TrimWavFile(audioConverted, new TimeSpan(0, 0, 0), ts);
             string BackgroundAudioMp3 = ffh.ConvertWAVToMp3(trimmedBackgroundAudio);
 
-            string mixedAudio = ffh.MixAudio(VideoAudioMp3, BackgroundAudioMp3);
+            string mixedAudio = ffh.MixAudio(VideoAudioMp3, BackgroundAudioMp3, volumeSliderValue);
             string mutedVideo = ffh.Mute(concVideo);
             string replacedAudio = ffh.ReplaceAudio(mutedVideo, mixedAudio, NameBox.Text);
+            string finalVid = ffh.CutTo10Min(replacedAudio, NameBox.Text);
 
+        }
+
+        private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            volumeSliderValue = Convert.ToSingle(Math.Round(VolumeSlider.Value, 3));
+            VolumeBox.Text = volumeSliderValue + "";
         }
     }
 }

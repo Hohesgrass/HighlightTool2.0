@@ -34,7 +34,7 @@ namespace HighlightTool2._0
         /// </summary>
         /// <param name="patn"></param>
         /// <returns></returns>
-        public String MixAudio(String path1, String path2);
+        public String MixAudio(String path1, String path2, float Volume);
 
         /// <summary>
         /// returns path to converted Audio (WAV to MP3)

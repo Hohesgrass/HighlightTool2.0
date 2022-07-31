@@ -36,8 +36,8 @@ namespace HighlightTool2._0
 
             string[] videos = new string[20];
 
-            using (var engine = new Engine(FFMPEG_EXE))
-            {
+            using var engine = new Engine(FFMPEG_EXE);
+            
                 engine.GetMetadata(inputFile);
                 int length = (int)GetVideoLength(path).TotalSeconds;
                 int sections = length / 19;
@@ -55,8 +55,28 @@ namespace HighlightTool2._0
                     engine.Convert(inputFile, outputFile, options);
                     total = total + sections;
                 }
-            }
+            
             return videos;
+        }
+
+        public string CutTo10Min(string path, string videoName)
+        {
+            var inputFile = new MediaFile { Filename = path};
+            var outputFile = new MediaFile { Filename = FINALFOLDER + videoName + ".mp4"};
+
+
+            using var engine = new Engine(FFMPEG_EXE);
+
+            engine.GetMetadata(inputFile);
+
+            var options = new ConversionOptions();
+
+            options.CutMedia(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(600));
+            engine.Convert(inputFile, outputFile, options);
+
+            DeleteTempFiles();
+
+            return FINALFOLDER + videoName + ".mp4";
         }
 
         public string ConcatenateVideos(string[] videos)
@@ -89,56 +109,60 @@ namespace HighlightTool2._0
                 }
             }
             Mp3Counter++;
+
             return mp3FilePath;
         } 
 
         public string ExtractAudio(string path)
         {
             FFMpeg.ExtractAudio(path, TEMPFOLDER + "tempAudio.mp3");
+
             return TEMPFOLDER + "tempAudio.mp3";
         }
 
-        public string MixAudio(string extractedAudio, string backgroundAudio)
+        public string MixAudio(string extractedAudio, string backgroundAudio, float volume)
         {
             using (var reader1 = new AudioFileReader(extractedAudio))
             using (var reader2 = new AudioFileReader(backgroundAudio))
             {
-                reader2.Volume = 0.025f;
+                //0.025f
+                reader2.Volume = volume;
                 var mixer = new MixingSampleProvider(new[] { reader1, reader2 });
                 WaveFileWriter.CreateWaveFile16(TEMPFOLDER + "tempMixed.wav", mixer);
             }
+
             return TEMPFOLDER + "tempMixed.wav";
         }
 
         public string Mute(string path)
         {
             FFMpeg.Mute(path, TEMPFOLDER + "mutedVideo.mp4");
+
             return TEMPFOLDER + "mutedVideo.mp4";
         }
 
         public string ReplaceAudio(string videoPath, string mixedAudio, string videoName)
         {
-            FFMpeg.ReplaceAudio(videoPath, mixedAudio, FINALFOLDER + videoName + ".mp4");
-            return FINALFOLDER + videoName + ".mp4";
+            FFMpeg.ReplaceAudio(videoPath, mixedAudio, TEMPFOLDER + videoName + ".mp4");
+
+            return TEMPFOLDER + videoName + ".mp4";
         }
 
         public String TrimWavFile(string wavPath, TimeSpan cutFromStart, TimeSpan cutFromEnd)
         {
             using (WaveFileReader reader = new WaveFileReader(wavPath))
             {
-                using (WaveFileWriter writer = new WaveFileWriter(TEMPFOLDER + "TrimmedAudio.wav", reader.WaveFormat))
-                {
-                    int bytesPerMillisecond = reader.WaveFormat.AverageBytesPerSecond / 1000;
+                using WaveFileWriter writer = new WaveFileWriter(TEMPFOLDER + "TrimmedAudio.wav", reader.WaveFormat);
+                int bytesPerMillisecond = reader.WaveFormat.AverageBytesPerSecond / 1000;
 
-                    int startPos = (int)cutFromStart.TotalMilliseconds * bytesPerMillisecond;
-                    startPos = startPos - startPos % reader.WaveFormat.BlockAlign;
+                int startPos = (int)cutFromStart.TotalMilliseconds * bytesPerMillisecond;
+                startPos = startPos - startPos % reader.WaveFormat.BlockAlign;
 
-                    int endBytes = (int)cutFromEnd.TotalMilliseconds * bytesPerMillisecond;
-                    endBytes = endBytes - endBytes % reader.WaveFormat.BlockAlign;
-                    int endPos = (int)reader.Length - endBytes;
+                int endBytes = (int)cutFromEnd.TotalMilliseconds * bytesPerMillisecond;
+                endBytes = endBytes - endBytes % reader.WaveFormat.BlockAlign;
+                int endPos = (int)reader.Length - endBytes;
 
-                    TrimWavFile(reader, writer, startPos, endPos);
-                }
+                TrimWavFile(reader, writer, startPos, endPos);
             }
             return TEMPFOLDER + "TrimmedAudio.wav";
         }
