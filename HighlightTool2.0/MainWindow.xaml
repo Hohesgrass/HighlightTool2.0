@@ -1,0 +1,121 @@
+﻿<Window x:Class="HighlightTool2._0.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HighlightTool2._0"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20">
+            </ColumnDefinition>
+
+            <ColumnDefinition>
+            </ColumnDefinition>
+
+            <ColumnDefinition>
+            </ColumnDefinition>
+
+            <ColumnDefinition>
+            </ColumnDefinition>
+
+            <ColumnDefinition>
+            </ColumnDefinition>
+
+            <ColumnDefinition Width="20">
+            </ColumnDefinition>
+
+            <ColumnDefinition Width="60">
+            </ColumnDefinition>
+
+            <ColumnDefinition>
+            </ColumnDefinition>
+
+            <ColumnDefinition Width="20">
+            </ColumnDefinition>
+
+
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="10">
+            </RowDefinition>
+
+            <RowDefinition Height="40">
+            </RowDefinition>
+
+            <RowDefinition Height="20">
+            </RowDefinition>
+
+            <RowDefinition Height="20">
+            </RowDefinition>
+
+            <RowDefinition Height="20">
+            </RowDefinition>
+
+            <RowDefinition Height="10">
+            </RowDefinition>
+
+            <RowDefinition Height="20">
+            </RowDefinition>
+
+            <RowDefinition Height="20">
+            </RowDefinition>
+
+            <RowDefinition Height="10">
+            </RowDefinition>
+
+            <RowDefinition Height="20">
+            </RowDefinition>
+
+            <RowDefinition Height="20">
+            </RowDefinition>
+
+            <RowDefinition Height="5">
+            </RowDefinition>
+
+            <RowDefinition Height="5">
+            </RowDefinition>
+            
+            <RowDefinition Height="20">
+            </RowDefinition>
+            
+            <RowDefinition Height="20">
+            </RowDefinition>
+            
+            <RowDefinition Height="40">
+            </RowDefinition>
+            
+            <RowDefinition Height="60">
+            </RowDefinition>
+
+            <RowDefinition Height="10">
+            </RowDefinition>
+
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Faust Highlight Tool 2.0" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" FontSize="24"/>
+
+
+        <TextBlock Text="Choose the .mp4 file" Grid.Column="1" Grid.Row="3"/>
+        <TextBox x:Name="VideoTextBox" Text="..." Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="4"/>
+        <Button x:Name="VideoButton" Content="open file" Grid.Column="6" Grid.Row="4"></Button>
+
+        <TextBlock Text="Choose the Background Music" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="MusicTextBox" Text="..." Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="4"/>
+        <Button x:Name="AudioButton" Content="open mp3" Grid.Column="6" Grid.Row="7"></Button>
+
+        <TextBlock Text="Volume Slider" Grid.Column="1" Grid.Row="9"/>
+        <Slider x:Name="VolumeSlider" Grid.Column="1" Grid.Row="10" Grid.ColumnSpan="2"/>
+        <TextBlock x:Name="VolumeBox" Text="1" ></TextBlock>
+
+        <TextBlock Text="Choose the name of ýour final video" Grid.Column="1" Grid.Row="13" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="NameBox" Text="..." Grid.Column="1" Grid.Row="14" Grid.ColumnSpan="4"></TextBox>
+
+        <Button x:Name="StartButton" Content="Go" Grid.Column="3" Grid.Row="16"></Button>
+        
+        
+    </Grid>
+</Window>

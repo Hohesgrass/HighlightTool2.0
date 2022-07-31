@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HighlightTool2.0", "HighlightTool2.0\HighlightTool2.0.csproj", "{B4718329-6513-43BF-A24E-9FD9D722070C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B4718329-6513-43BF-A24E-9FD9D722070C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4718329-6513-43BF-A24E-9FD9D722070C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4718329-6513-43BF-A24E-9FD9D722070C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4718329-6513-43BF-A24E-9FD9D722070C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D6F6C421-3B18-4D88-9427-0134CA01A7A4}
+	EndGlobalSection
+EndGlobal
