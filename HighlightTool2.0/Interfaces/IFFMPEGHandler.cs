@@ -65,5 +65,9 @@ namespace HighlightTool2._0
         public String TrimWavFile(String path, TimeSpan cutFromStart, TimeSpan cutFromEnd);
 
         public Boolean IsAudioLonger(String path1, String path2);
+
+        public string ConvertMP3ToWav(string path);
+
+        public TimeSpan GetDurationDifference(string path1, string path2);
     }
 }

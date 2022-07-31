@@ -8,6 +8,7 @@ using FFMpegCore;
 using MediaToolkit;
 using MediaToolkit.Model;
 using MediaToolkit.Options;
+using NAudio.MediaFoundation;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 
@@ -20,10 +21,11 @@ namespace HighlightTool2._0
         private const string FFMPEG_TMP = @".\ffmpeg\tmp\";
         private const string TEMPFOLDER = @".\Temporary Files\";
         private const string FINALFOLDER = @".\Final Videos\";
+        private int Mp3Counter = 0;
 
-        public FFMPEGHandler(string videoName)
+        public FFMPEGHandler()
         {
-
+            MediaFoundationApi.Startup();
             GlobalFFOptions.Configure(new FFOptions { BinaryFolder = FFMPEG_BIN, TemporaryFilesFolder = FFMPEG_TMP });
         }
 
@@ -32,7 +34,7 @@ namespace HighlightTool2._0
             var inputFile = new MediaFile { Filename = path };
             var outputFile = new MediaFile { };
 
-            String[] videos = new String[20];
+            string[] videos = new string[20];
 
             using (var engine = new Engine(FFMPEG_EXE))
             {
@@ -40,7 +42,7 @@ namespace HighlightTool2._0
                 int length = (int)GetVideoLength(path).TotalSeconds;
                 int sections = length / 19;
                 int total = 0;
-                var options = new ConversionOptions(); 
+                var options = new ConversionOptions();
                 for (int i = 0; i < 20; i++)
                 {
                     outputFile = new MediaFile { Filename = TEMPFOLDER + "video" + i + ".mp4" };
@@ -63,9 +65,31 @@ namespace HighlightTool2._0
             return TEMPFOLDER + "CatVideo.mp4";
         }
 
+        public TimeSpan GetDurationDifference(string path, string path2)
+        {
+            WaveFileReader wf = new WaveFileReader(path);
+            WaveFileReader wf2 = new WaveFileReader(path);
+
+            TimeSpan ts = wf2.TotalTime - wf.TotalTime;
+            return ts;
+        }
+
         public string ConvertWAVToMp3(string path)
         {
-            throw new NotImplementedException();
+            string mp3FilePath = Path.Combine(TEMPFOLDER, "convertedToMP3" + Mp3Counter + ".mp3");
+            using (var reader = new WaveFileReader(path))
+            {
+                try
+                {
+                    MediaFoundationEncoder.EncodeToMp3(reader, mp3FilePath);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            Mp3Counter++;
+            return mp3FilePath;
         } 
 
         public string ExtractAudio(string path)
@@ -83,7 +107,7 @@ namespace HighlightTool2._0
                 var mixer = new MixingSampleProvider(new[] { reader1, reader2 });
                 WaveFileWriter.CreateWaveFile16(TEMPFOLDER + "tempMixed.wav", mixer);
             }
-            return TEMPFOLDER + TEMPFOLDER + "tempMixed.wav";
+            return TEMPFOLDER + "tempMixed.wav";
         }
 
         public string Mute(string path)
@@ -95,7 +119,7 @@ namespace HighlightTool2._0
         public string ReplaceAudio(string videoPath, string mixedAudio, string videoName)
         {
             FFMpeg.ReplaceAudio(videoPath, mixedAudio, FINALFOLDER + videoName + ".mp4");
-            throw new NotImplementedException();
+            return FINALFOLDER + videoName + ".mp4";
         }
 
         public String TrimWavFile(string wavPath, TimeSpan cutFromStart, TimeSpan cutFromEnd)
@@ -136,6 +160,16 @@ namespace HighlightTool2._0
                     }
                 }
             }
+        }
+        public string ConvertMP3ToWav(string path)
+        {
+            string infile = path;
+            string outfile = TEMPFOLDER + "convertedToWav.wav";
+            using (var reader = new Mp3FileReader(infile))
+            {
+                WaveFileWriter.CreateWaveFile(outfile, reader);
+            }
+            return outfile;
         }
 
         private TimeSpan GetVideoLength(string path)

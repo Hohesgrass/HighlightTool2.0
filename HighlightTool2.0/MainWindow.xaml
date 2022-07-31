@@ -101,11 +101,11 @@
 
         <TextBlock Text="Choose the .mp4 file" Grid.Column="1" Grid.Row="3"/>
         <TextBox x:Name="VideoTextBox" Text="..." Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="4"/>
-        <Button x:Name="VideoButton" Content="open file" Grid.Column="6" Grid.Row="4"></Button>
+        <Button x:Name="VideoButton" Content="open file" Grid.Column="6" Grid.Row="4" Click="VideoButton_Click"></Button>
 
         <TextBlock Text="Choose the Background Music" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="2"/>
         <TextBox x:Name="MusicTextBox" Text="..." Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="4"/>
-        <Button x:Name="AudioButton" Content="open mp3" Grid.Column="6" Grid.Row="7"></Button>
+        <Button x:Name="AudioButton" Content="open mp3" Grid.Column="6" Grid.Row="7" Click="AudioButton_Click"></Button>
 
         <TextBlock Text="Volume Slider" Grid.Column="1" Grid.Row="9"/>
         <Slider x:Name="VolumeSlider" Grid.Column="1" Grid.Row="10" Grid.ColumnSpan="2"/>
@@ -114,7 +114,7 @@
         <TextBlock Text="Choose the name of ýour final video" Grid.Column="1" Grid.Row="13" Grid.ColumnSpan="2"/>
         <TextBox x:Name="NameBox" Text="..." Grid.Column="1" Grid.Row="14" Grid.ColumnSpan="4"></TextBox>
 
-        <Button x:Name="StartButton" Content="Go" Grid.Column="3" Grid.Row="16"></Button>
+        <Button x:Name="StartButton" Content="Go" Grid.Column="3" Grid.Row="16" Click="StartButton_Click"></Button>
         
         
     </Grid>
