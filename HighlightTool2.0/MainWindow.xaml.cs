@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +28,7 @@ namespace HighlightTool2._0
         public MainWindow()
         {
             InitializeComponent();
+            CreateFolders();
         }
 
         private void VideoButton_Click(object sender, RoutedEventArgs e)
@@ -76,6 +78,22 @@ namespace HighlightTool2._0
         {
             volumeSliderValue = Convert.ToSingle(Math.Round(VolumeSlider.Value, 3));
             VolumeBox.Text = volumeSliderValue + "";
+        }
+
+        private void CreateFolders()
+        {
+            string tmpFolder = @".\Temporary Files\";
+            string finalFolder = @".\Final Videos\";
+
+            if (!Directory.Exists(tmpFolder))
+            {
+                Directory.CreateDirectory(tmpFolder);
+            }
+
+            if (!Directory.Exists(finalFolder))
+            {
+                Directory.CreateDirectory(finalFolder);
+            }
         }
     }
 }
