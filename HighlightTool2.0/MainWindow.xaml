@@ -96,24 +96,23 @@
 
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Faust Highlight Tool 2.0" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" FontSize="24"/>
+        <TextBlock x:Name="Caption" Text="Faust Highlight Tool 2.0" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" FontSize="24"/>
 
 
         <TextBlock Text="Choose the .mp4 file" Grid.Column="1" Grid.Row="3"/>
         <TextBox x:Name="VideoTextBox" Text="..." Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="4"/>
         <Button x:Name="VideoButton" Content="open file" Grid.Column="6" Grid.Row="4" Click="VideoButton_Click"></Button>
 
-        <TextBlock Text="Choose the Background Music" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="2"/>
-        <TextBox x:Name="MusicTextBox" Text="..." Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="4"/>
-        <Button x:Name="AudioButton" Content="open mp3" Grid.Column="6" Grid.Row="7" Click="AudioButton_Click"></Button>
+        
 
-        <TextBlock Text="Volume Slider" Grid.Column="1" Grid.Row="9"/>
-        <Slider x:Name="VolumeSlider" Grid.Column="1" Grid.Row="10" Grid.ColumnSpan="2" Maximum="0.1" TickPlacement="BottomRight" TickFrequency="0.005" IsSnapToTickEnabled="True" ValueChanged="VolumeSlider_ValueChanged"/>
-        <TextBlock x:Name="VolumeBox" Text="" Grid.Column="6" Grid.Row="10"></TextBlock>
+       
 
-        <TextBlock Text="Choose the name of ýour final video" Grid.Column="1" Grid.Row="13" Grid.ColumnSpan="2"/>
-        <TextBox x:Name="NameBox" Text="..." Grid.Column="1" Grid.Row="14" Grid.ColumnSpan="4"></TextBox>
+        <TextBlock Text="Choose the name of your final video" Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="NameBox" Text="..." Grid.Column="1" Grid.Row="10" Grid.ColumnSpan="4"></TextBox>
 
+        <ProgressBar x:Name="ProgressBar" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="14" Minimum="0" Maximum="100" Value="0"></ProgressBar>
+        
+        
         <Button x:Name="StartButton" Content="Go" Grid.Column="3" Grid.Row="16" Click="StartButton_Click"></Button>
         
         

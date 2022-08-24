@@ -20,7 +20,7 @@ namespace HighlightTool2._0
         /// </summary>
         /// <param name="videos"></param>
         /// <returns></returns>
-        public String ConcatenateVideos(String[] videos);
+        public String ConcatenateVideos(String[] videos, string videoName);
 
         /// <summary>
         /// returns path of extracted mp3

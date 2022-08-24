@@ -22,6 +22,7 @@ namespace HighlightTool2._0
         private const string TEMPFOLDER = @".\Temporary Files\";
         private const string FINALFOLDER = @".\Final Videos\";
         private int Mp3Counter = 0;
+        private int TrimCounter = 0;
 
         public FFMPEGHandler()
         {
@@ -71,24 +72,39 @@ namespace HighlightTool2._0
 
             var options = new ConversionOptions();
 
-            options.CutMedia(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(600));
-            engine.Convert(inputFile, outputFile, options);
+            //options.CutMedia(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(600));
+            //engine.Convert(inputFile, outputFile, options);
 
-            DeleteTempFiles();
+           // DeleteTempFiles();
 
             return FINALFOLDER + videoName + ".mp4";
         }
 
-        public string ConcatenateVideos(string[] videos)
+        public String CombineAudio(string path)
         {
-            FFMpeg.Join(TEMPFOLDER + "CatVideo.mp4", videos);
-            return TEMPFOLDER + "CatVideo.mp4";
+            var first = new AudioFileReader(path);
+            var second = new AudioFileReader(path);
+            var third = new AudioFileReader(path);
+            var fourth = new AudioFileReader(path);
+            var fifth = new AudioFileReader(path);
+
+            var playlist = new ConcatenatingSampleProvider(new[] { first, second, third, fourth, fifth });
+
+            WaveFileWriter.CreateWaveFile16(TEMPFOLDER + "stretchedAudio.wav", playlist);
+
+            return TEMPFOLDER + "stretchedAudio.wav";
+        }
+
+        public string ConcatenateVideos(string[] videos, string videoName)
+        {
+            FFMpeg.Join(FINALFOLDER + videoName + ".mp4", videos);
+            return FINALFOLDER + videoName + ".mp4";
         }
 
         public TimeSpan GetDurationDifference(string path, string path2)
         {
             WaveFileReader wf = new WaveFileReader(path);
-            WaveFileReader wf2 = new WaveFileReader(path);
+            WaveFileReader wf2 = new WaveFileReader(path2);
 
             TimeSpan ts = wf2.TotalTime - wf.TotalTime;
             return ts;
@@ -116,14 +132,41 @@ namespace HighlightTool2._0
         public string ExtractAudio(string path)
         {
             FFMpeg.ExtractAudio(path, TEMPFOLDER + "tempAudio.mp3");
-
+            
             return TEMPFOLDER + "tempAudio.mp3";
         }
 
+        public WaveFormat GetWavFormat(string path)
+        {
+            var reader1 = new AudioFileReader(path);
+            WaveFormat wavFormat = reader1.WaveFormat;
+            return wavFormat;
+        }
+        public string ChangeWavFormat(string path, WaveFormat format)
+        {
+            var newFormat = new WaveFormat(44800, 32, 1);
+            using (var reader = new WaveFileReader(path))
+            {
+                using (var conversionStream = new WaveFormatConversionStream(newFormat, reader))
+                {
+                    WaveFileWriter.CreateWaveFile(TEMPFOLDER + "HZ.wav", conversionStream);
+                }
+            }
+            return TEMPFOLDER + "HZ.wav";
+        }
         public string MixAudio(string extractedAudio, string backgroundAudio, float volume)
         {
-            using (var reader1 = new AudioFileReader(extractedAudio))
-            using (var reader2 = new AudioFileReader(backgroundAudio))
+            var reader1 = new AudioFileReader(extractedAudio);
+            var reader2 = new AudioFileReader(backgroundAudio);
+
+            if (reader1.WaveFormat != reader2.WaveFormat)
+            {
+               // string newAudio = ChangeWavFormat(backgroundAudio, reader1.WaveFormat);
+               // reader2 = new AudioFileReader(newAudio);
+            }
+
+            using (reader1)
+            using (reader2)    
             {
                 //0.025f
                 reader2.Volume = volume;
@@ -152,7 +195,7 @@ namespace HighlightTool2._0
         {
             using (WaveFileReader reader = new WaveFileReader(wavPath))
             {
-                using WaveFileWriter writer = new WaveFileWriter(TEMPFOLDER + "TrimmedAudio.wav", reader.WaveFormat);
+                using WaveFileWriter writer = new WaveFileWriter(TEMPFOLDER + "TrimmedAudio" + TrimCounter + ".wav", reader.WaveFormat);
                 int bytesPerMillisecond = reader.WaveFormat.AverageBytesPerSecond / 1000;
 
                 int startPos = (int)cutFromStart.TotalMilliseconds * bytesPerMillisecond;
@@ -163,6 +206,7 @@ namespace HighlightTool2._0
                 int endPos = (int)reader.Length - endBytes;
 
                 TrimWavFile(reader, writer, startPos, endPos);
+                TrimCounter++;
             }
             return TEMPFOLDER + "TrimmedAudio.wav";
         }

@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
+using NAudio.Wave;
 
 namespace HighlightTool2._0
 {
@@ -41,44 +42,35 @@ namespace HighlightTool2._0
             }
         }
 
-        private void AudioButton_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            if (openFileDialog.ShowDialog() == true)
-            {
-                this.audioPath = openFileDialog.FileName;
-                MusicTextBox.Text = audioPath;
-            }
-        }
+        //private void AudioButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    OpenFileDialog openFileDialog = new OpenFileDialog();
+        //    if (openFileDialog.ShowDialog() == true)
+        //    {
+        //        this.audioPath = openFileDialog.FileName;
+        //        MusicTextBox.Text = audioPath;
+        //    }
+        //}
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            FFMPEGHandler ffh = new FFMPEGHandler();
-
-            string[] cutVideos = ffh.CutVideo(videoPath);
-            string concVideo = ffh.ConcatenateVideos(cutVideos);
-
-            string extrMP3 = ffh.ExtractAudio(concVideo);
-            string extractedWav = ffh.ConvertMP3ToWav(extrMP3);
-            string VideoAudioMp3 = ffh.ConvertWAVToMp3(extractedWav);
-
-            string audioConverted = ffh.ConvertMP3ToWav(audioPath);
-            TimeSpan ts = ffh.GetDurationDifference(extractedWav, audioConverted);
-            string trimmedBackgroundAudio = ffh.TrimWavFile(audioConverted, new TimeSpan(0, 0, 0), ts);
-            string BackgroundAudioMp3 = ffh.ConvertWAVToMp3(trimmedBackgroundAudio);
-
-            string mixedAudio = ffh.MixAudio(VideoAudioMp3, BackgroundAudioMp3, volumeSliderValue);
-            string mutedVideo = ffh.Mute(concVideo);
-            string replacedAudio = ffh.ReplaceAudio(mutedVideo, mixedAudio, NameBox.Text);
-            string finalVid = ffh.CutTo10Min(replacedAudio, NameBox.Text);
-
+            Task.Run(() =>
+            {
+                FFMPEGHandler ffh = new FFMPEGHandler();
+                Dispatcher.Invoke(() => ProgressBar.Value = 15);
+                string[] cutVideos = ffh.CutVideo(videoPath);
+                Dispatcher.Invoke(() => ProgressBar.Value = 50);
+                string concVideo = ffh.ConcatenateVideos(cutVideos, Dispatcher.Invoke(() => NameBox.Text));
+                Dispatcher.Invoke(() => ProgressBar.Value = 75);
+                Dispatcher.Invoke(() => ProgressBar.Value = 100);
+            });
         }
 
-        private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            volumeSliderValue = Convert.ToSingle(Math.Round(VolumeSlider.Value, 3));
-            VolumeBox.Text = volumeSliderValue + "";
-        }
+        //private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        //{
+        //    volumeSliderValue = Convert.ToSingle(Math.Round(VolumeSlider.Value, 3));
+        //    VolumeBox.Text = volumeSliderValue + "";
+        //}
 
         private void CreateFolders()
         {
